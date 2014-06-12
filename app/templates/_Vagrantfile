@@ -1,0 +1,24 @@
+<% if (fix12879) { %>
+# Provide fix for Bug 12879 in VirtualBox: https://www.virtualbox.org/ticket/12879
+# If we're on version 4.3.10 of Guest Additions AND we haven't created the symlink:
+$fix12879 = <<SCRIPT
+if [ -e /opt/VBoxGuestAdditions-4.3.10/lib/VBoxGuestAdditions -a ! -h /usr/lib/VBoxGuestAdditions ]; then
+    ln -s /opt/VBoxGuestAdditions-4.3.10/lib/VBoxGuestAdditions /usr/lib/VBoxGuestAdditions
+    echo "Working around bug 12879 in VirtualBox. Next do a vagrant reload --provision'"
+    exit 1
+fi
+SCRIPT
+
+
+<% } %>
+Vagrant.configure("2") do |config|
+
+  config.vm.box = "<%= baseBoxName %>"
+  config.vm.box_url = "<%= baseBoxURL %>"
+  
+  <% if (fix12879) { %>config.vm.provision "shell", inline: $fix12879<% } %>
+  config.vm.provision "shell", path: "provision-dev.sh"
+
+  config.vm.network :private_network, ip: "<%= hostIP %>"
+
+end

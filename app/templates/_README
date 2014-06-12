@@ -1,0 +1,138 @@
+Development instances are provided by Vagrant and managed using a handful
+of Fabric commands.
+
+
+I. Quick start
+---
+
+Install host dependencies, then just run:
+  $ fab setup
+  $ fab start 
+
+Or, read on for a better idea of the available Fabric commands.
+
+Depending on host platform, you might need to add the `-D` switch after `fab`
+when interacting with your local VM. `-D` is a shorthand for the option
+`--disable-known-hosts`. See `http://docs.fabfile.org/en/1.8/usage/ssh.html`
+for more info on what makes this necessary.
+
+
+II. Installing dependencies
+---
+
+To ensure all host dependencies are met, you must execute the following steps
+on the host machine:
+  
+  1. Install VirtualBox (www.virtualbox.org)
+  2. Install Vagrant (www.vagrantup.com)
+  3. Install Python 2.7.x
+  4. Install Pip:
+       $ easy_install pip
+  5. Install Python modules listed in host-requirements.txt:
+       $ pip install -r host-requirements.txt
+
+The host requirements file currently only installs Fabric 1.8; unless you
+already have another version of Fabric installed system-wide that you wish
+to keep, there is no need to create a virtualenv, since the app's actual
+dependencies will be installed inside a virtual machine.
+
+
+III. Creating a local development VM for the first time
+---
+
+To spawn a VM:
+  
+  1. Clone repo; chdir to the root of the repo, and execute:
+       $ fab setup
+  2. You will be asked to provide an username, email and password (twice)
+     to create the app's superuser account. You can use anything; in
+     development, I usually default to just 'admin', 'admin@example.com',
+     and again 'admin'.
+
+NOTE: On Windows, Fabric might have trouble handling keys such as backspace
+      or arrow keys when faced with an input prompt. Not to worry - even
+      though backspace doesn't work, it'll insert an invalid character,
+      which will make Django just repeat the prompt.
+
+The repo root will be shared with the VM; you can find it mounted at /vagrant,
+and symlinked at /www/s4c-cms.
+
+If you need to spawn multiple separate VMs, currently you would need multiple
+Git working trees checked out in different directories on your system.
+
+
+IV. Starting the Django development server
+---
+
+  1. To start the development server, execute:
+       $ fab start
+  2. You can now visit the app homepage at http://33.33.33.60/, or
+     access the CMS admin panel at http://33.33.33.60/admin, using the
+     above credentials to log in.
+
+
+V. Rebuilding the development VM
+---
+
+After you've made some changes to the codebase and/or the VM's filesystem,
+it's a good idea to rebuild the VM from scratch. This can help you ensure
+that things will work right on a clean build, check if the app's behavior is
+not influenced by any environmental coincidence, and/or make sure any changes
+that you've made don't break the installation process. 
+
+To get a fresh VM, run:
+  $ fab rebuild
+
+Note that this will delete the contents of the database.
+
+
+VI. Running Django management commands. Using the Django shell.
+---
+
+Another operation that comes in handy once in a while is to open a Django
+shell. The easiest way to do this is:
+  $ fab manage:shell
+
+This opens a Python REPL with access to the app's internals. For example,
+you can list all existing users by running:
+  >>> from django.contrib.auth.models import User
+  >>> User.objects.all()
+
+You can also access any other management commands using the `manage` task.
+If you need to pass a string of command parameters that contains spaces,
+you need to quote it like this:
+  $ fab manage:"shell --help"
+
+
+VII. How to SSH into the VM
+---
+
+At times, the exposed Fabric tasks simply don't cut it. To get full access
+to the internals of the app and its environment, you can connect to the VM
+via SSH:
+  $ vagrant ssh
+
+This will only work if `ssh` is on the system path, which is usually the case
+on Linux and Mac hosts. A Windows build of OpenSSH is contained in msysgit;
+alternatively, you can use the PuTTY client for Windows:
+  $ vagrant plugin install vagrant-multi-putty
+  $ vagrant putty
+
+You can log in with username and password `vagrant`. You may notice that
+you have to run any Django management commands prefixed with `sudo`, e.g.:
+  $ sudo python /www/s4c-cms/manage.py shell
+  $ sudo python /vagrant/manage.py shell
+
+This is a limitation of the current setup; the Django development server
+needs root privileges in order to run on port 80, and some log files in
+`/var/log/s4c/` end up owned by `root:root`.
+
+
+VIII. Database migrations
+---
+
+Making changes to models requires a few steps to be executed manually.
+In order to keep the database schema in sync with the model definitions,
+you will need to generate and apply the appropriate South migration file.
+Please refer to the South manual (http://south.readthedocs.org/en/latest/)
+for details on how to do this.
