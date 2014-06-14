@@ -1,4 +1,13 @@
+$inline = <<SCRIPT
+/usr/bin/puppet module install maestrodev-wget       || true
+/usr/bin/puppet module install puppetlabs-apt        || true
+<% if (dbType == 'PostgreSQL') { %>
+/usr/bin/puppet module install puppetlabs-postgresql || true
+<% } %>
+SCRIPT
+
 <% if (fix12879) { %>
+
 # Provide fix for Bug 12879 in VirtualBox: https://www.virtualbox.org/ticket/12879
 # If we're on version 4.3.10 of Guest Additions AND we haven't created the symlink:
 $fix12879 = <<SCRIPT
@@ -9,15 +18,18 @@ if [ -e /opt/VBoxGuestAdditions-4.3.10/lib/VBoxGuestAdditions -a ! -h /usr/lib/V
 fi
 SCRIPT
 
-
 <% } %>
+
+
+
 Vagrant.configure("2") do |config|
 
   config.vm.box = "<%= baseBoxName %>"
   config.vm.box_url = "<%= baseBoxURL %>"
   
   <% if (fix12879) { %>config.vm.provision "shell", inline: $fix12879<% } %>
-  config.vm.provision "shell", path: "provision-dev.sh"
+  config.vm.provision "shell", inline: $inline
+  config.vm.provision "puppet"
 
   config.vm.network :private_network, ip: "<%= hostIP %>"
 
