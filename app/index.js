@@ -7,7 +7,7 @@ var chalk = require('chalk');
 
 
 
-var DjangoEgasimusGenerator = yeoman.generators.Base.extend({
+var YoDjangoGenerator = yeoman.generators.Base.extend({
 
 
     init: function () {},
@@ -33,94 +33,117 @@ var DjangoEgasimusGenerator = yeoman.generators.Base.extend({
         this.log(yosay('...because fuck you, that\'s why.'));
 
         var prompts = [
+          { type:    'input',
+            name:    'projectName',
+            message: 'Project name?', },
 
-            { type:    'input',
-              name:    'projectName',
-              message: 'Project name? ' +
-                       '[a valid, non-clashing name for your new Python module]', },
+          { type:    'input',
+            name:    'djangoVersion',
+            message: 'Django version to use?',
+            default: '1.6.6', },
 
-            { type:    'input',
-              name:    'djangoVersion',
-              message: 'Django version to use?',
-              default: '1.6.6', },
+          { type:    'input',
+            name:    'baseBoxURL',
+            message: 'URL for base Vagrant box?',
+            default: 'https://s3-eu-west-1.amazonaws.com/egasimus-vm-images/' +
+                     'ubuntu-12.04.4-server-amd64.box' },
 
-            { type:    'input',
-              name:    'baseBoxURL',
-              message: 'URL for base Vagrant box?',
-              default: 'https://s3-eu-west-1.amazonaws.com/egasimus-vm-images/' +
-                       'ubuntu-12.04.4-server-amd64.box' },
+          { type:    'input',
+            name:    'hostIP',
+            message: 'IP for virtual machine? [only visible to your own computer]',
+            default: '33.33.33.1', },
 
-            { type:    'input',
-              name:    'hostIP',
-              message: 'Host IP? [only visible to your own computer]',
-              default: '33.33.33.1', },
+          { type:    'confirm',
+            name:    'hasDatabase',
+            message: 'Will you be needing a database?',
+            default: true, },
 
-            { type:    'confirm',
-              name:    'hasDatabase',
-              message: 'Will you be needing a database?',
-              default: true, },
-
-            { type:    'list',
-              name:    'dbType',
-              message: 'What database do you need set up?',
-              choices: ['PostgreSQL', 'MySQL'],
-              default: 'PostgreSQL', },
-
-            { type:    'input',
-              name:    'dbName',
-              message: 'Database name?', },
-
-            { type:    'input',
-              name:    'dbPassword',
-              message: 'Database root password?', },
-
-            { type:    'confirm',
-              name:    'fix12879',
-              message: 'Are you using VirtualBox 4.3.10? (fixes VB#12879)',
-              default: false }, ];
+          { type:    'confirm',
+            name:    'fix12879',
+            message: 'Are you using VirtualBox 4.3.10? (fixes VB#12879)',
+            default: false }, ];
 
         this.prompt(prompts, function (props) {
             this.answers = props;
+
             this.answers.wwwDir = '/www/' + props.projectName;
             this.answers.logDir = '/var/log/' + props.projectName;
             
             this.answers.projectUser = this.answers.projectGroup =
-            this.answers.baseBoxName =
-            this.answers.dbName = this.answers.dbUser = props.projectName;
+            this.answers.baseBoxName = props.projectName;
             
             this.answers.secretKey = self._secretKey(96);
-            done();
+
+            if (props.hasDatabase) {
+                 var dbPrompts = [
+                   { type:    'list',
+                     name:    'dbType',
+                     message: 'DB: What database do you need?',
+                     choices: ['PostgreSQL', 'MySQL'],
+                     default: 'PostgreSQL', },
+ 
+                   { type:    'input',
+                     name:    'dbName',
+                     message: 'DB: Database name?',
+                     default: this.answers.projectName},
+ 
+                   { type:    'input',
+                     name:    'dbUser',
+                     message: 'DB: Database username?',
+                     default: this.answers.projectName},
+
+                   { type:    'input',
+                     name:    'dbPassword',
+                     message: 'DB: Database root password? [insecure]',
+                     default: this.answers.projectName}, ];
+
+                this.prompt(dbPrompts, function (dbProps) {
+                    this.answers.dbType     = dbProps.dbType;
+                    this.answers.dbUser     = dbProps.dbUser;
+                    this.answers.dbName     = dbProps.dbName;
+                    this.answers.dbPassword = dbProps.dbPassword;
+                    done();
+                }.bind(this)); }
+            else done();
+
         }.bind(this));
     },
 
 
     app: function () {
-        //this.sourceRoot('./templates');
    
         var t = ['fabfile.py',
                  'Vagrantfile',
-                 'provision.sh'
-                ]
+                 'provision.sh',
+                 'requirements.txt',
+                 'wsgi.py',
+                 'README',
+                 'deploy/nginx.conf',
+                 'deploy/uwsgi_upstart.conf'],
+
+            c = ['manage.py',],
+
+            d = ['deploy',
+                 'docs',
+                 'fixtures',
+                 'libs',
+                 'locale',
+                 'packer',
+                 this.answers.projectName];
+
+        for (var i = 0; i < d.length; i++) {
+            this.mkdir(d[i]);
+        }
 
         for (var i = 0; i < t.length; i++) {
             this.log('Generating ' + t[i]);
             this.template('_' + t[i],  t[i], this.answers);
         }
 
-        this.copy('manage.py', 'manage.py');
-        /*
-        this.copy('README', 'README');
-        this.copy('requirements.txt', 'requirements.txt');
-        this.copy('Vagrantfile', 'Vagrantfile');
-        this.copy('wsgi.py', 'wsgi.py');
+        for (var i = 0; i < c.length; i++) {
+            this.copy(c, c);
+        }
 
-        this.mkdir('deploy');
-        this.mkdir('docs');
-        this.mkdir('fixtures');
-        this.mkdir('libs');
-        this.mkdir('locale');
-        this.mkdir('packer');
-        this.mkdir(this.answers.projectName);*/
     },
 
 
@@ -129,4 +152,4 @@ var DjangoEgasimusGenerator = yeoman.generators.Base.extend({
 });
 
 
-module.exports = DjangoEgasimusGenerator;
+module.exports = YoDjangoGenerator;

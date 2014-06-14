@@ -54,17 +54,19 @@ chmod 774 <%= logDir %> /var/log/nginx /var/log/uwsgi
 chown --recursive nginx:<%= projectGroup %> /var/log/nginx
 chown --recursive uwsgi:<%= projectGroup %> /var/log/uwsgi
 
-<% if (dbType == 'MySQL') { %>
+<% if (hasDatabase && dbType == 'MySQL') { %>
 # Create MySQL database and user
 mysql -u root --password=thisisthedefaultmysqlrootpassword -e \
-    "CREATE DATABASE s4c DEFAULT CHARACTER SET utf8 DEFAULT COLLATE utf8_general_ci;"
+    "CREATE DATABASE <%= dbName %> DEFAULT CHARACTER SET utf8 DEFAULT COLLATE utf8_general_ci;"
 
 mysql -u root --password=thisisthedefaultmysqlrootpassword -e \
-    "GRANT ALL PRIVILEGES ON s4c.* To 's4c'@'localhost' IDENTIFIED BY '$DB_PASSWORD';"
-<% } else { %>
+    "GRANT ALL PRIVILEGES ON <%= dbName %>* To '<%= dbUser %>'@'localhost' IDENTIFIED BY '$DB_PASSWORD';"
+
+<% } else if (hasDatabase && dbType == 'PostgreSQL') { %>
 # Create PostgreSQL database and user
 sudo -u postgres createdb <%= dbName %> -E=utf8
 sudo -u postgres createuser <%= dbUser %> -d
+
 <% } %>
 
 # Sync DB and load initial data

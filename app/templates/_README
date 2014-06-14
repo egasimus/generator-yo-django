@@ -9,32 +9,25 @@ Install host dependencies, then just run:
   $ fab setup
   $ fab start 
 
-Or, read on for a better idea of the available Fabric commands.
-
 Depending on host platform, you might need to add the `-D` switch after `fab`
 when interacting with your local VM. `-D` is a shorthand for the option
 `--disable-known-hosts`. See `http://docs.fabfile.org/en/1.8/usage/ssh.html`
 for more info on what makes this necessary.
 
+Read on for more info on the available Fabric commands.
 
-II. Installing dependencies
+
+II. Setting up your host machine
 ---
 
-To ensure all host dependencies are met, you must execute the following steps
-on the host machine:
+To ensure all host dependencies are met, you must ensure that the following
+tools are installed on your host machine:
   
-  1. Install VirtualBox (www.virtualbox.org)
-  2. Install Vagrant (www.vagrantup.com)
-  3. Install Python 2.7.x
-  4. Install Pip:
-       $ easy_install pip
-  5. Install Python modules listed in host-requirements.txt:
-       $ pip install -r host-requirements.txt
-
-The host requirements file currently only installs Fabric 1.8; unless you
-already have another version of Fabric installed system-wide that you wish
-to keep, there is no need to create a virtualenv, since the app's actual
-dependencies will be installed inside a virtual machine.
+  1. VirtualBox   (https://www.virtualbox.org/wiki/Downloads)
+  2. Vagrant      (https://www.vagrantup.com/downloads.html)
+  3. Python 2.7.x (https://www.python.org/download/releases/2.7.6/)
+  4. Pip          (`$ easy_install pip`)
+  5. Fabric       (`$ pip install Fabric`)
 
 
 III. Creating a local development VM for the first time
@@ -50,12 +43,12 @@ To spawn a VM:
      and again 'admin'.
 
 NOTE: On Windows, Fabric might have trouble handling keys such as backspace
-      or arrow keys when faced with an input prompt. Not to worry - even
+      or arrow keys when faced with an input prompt. Not to worry -- even
       though backspace doesn't work, it'll insert an invalid character,
       which will make Django just repeat the prompt.
 
 The repo root will be shared with the VM; you can find it mounted at /vagrant,
-and symlinked at /www/s4c-cms.
+and symlinked at <%= wwwDir %>.
 
 If you need to spawn multiple separate VMs, currently you would need multiple
 Git working trees checked out in different directories on your system.
@@ -66,8 +59,8 @@ IV. Starting the Django development server
 
   1. To start the development server, execute:
        $ fab start
-  2. You can now visit the app homepage at http://33.33.33.60/, or
-     access the CMS admin panel at http://33.33.33.60/admin, using the
+  2. You can now visit the app homepage at http://<%= hostIP %>/, or
+     access the CMS admin panel at http://<%= hostIP %>/admin, using the
      above credentials to log in.
 
 
@@ -120,12 +113,11 @@ alternatively, you can use the PuTTY client for Windows:
 
 You can log in with username and password `vagrant`. You may notice that
 you have to run any Django management commands prefixed with `sudo`, e.g.:
-  $ sudo python /www/s4c-cms/manage.py shell
-  $ sudo python /vagrant/manage.py shell
+  $ sudo python <%= wwwDir %>/manage.py shell
 
 This is a limitation of the current setup; the Django development server
 needs root privileges in order to run on port 80, and some log files in
-`/var/log/s4c/` end up owned by `root:root`.
+`<%= logDir %>/` end up owned by `root:root`.
 
 
 VIII. Database migrations
