@@ -37,21 +37,39 @@ var YoDjangoGenerator = yeoman.generators.Base.extend({
             name:    'projectName',
             message: 'Project name?', },
 
+          { type:    'list',
+            name:    'projectType',
+            message: 'Project type?',
+            choices: ['mini', 'modern', 'default'],
+            default: 'modern' },
+
           { type:    'input',
             name:    'djangoVersion',
             message: 'Django version to use?',
-            default: '1.6.6', },
+            default: '1.6.5', },
 
           { type:    'input',
             name:    'baseBoxURL',
             message: 'URL for base Vagrant box?',
-            default: 'https://s3-eu-west-1.amazonaws.com/egasimus-vm-images/' +
-                     'ubuntu-12.04.4-server-amd64.box' },
+            default: 'https://oss-binaries.phusionpassenger.com/vagrant/' +
+                     'boxes/latest/ubuntu-14.04-amd64-vbox.box' },
 
           { type:    'input',
             name:    'hostIP',
             message: 'IP for virtual machine? [only visible to your own computer]',
-            default: '33.33.33.1', },
+            default: '6.6.6.2', },
+
+          { type:    'list',
+            name:    'provisioner',
+            message: 'Provision VM using:',
+            choices: ['shell', 'puppet'],
+            default: 'shell', },
+
+          { type:    'list',
+            name:    'server',
+            message: 'Your server of choice:',
+            choices: ['nginx', 'apache'],
+            default: 'nginx', },
 
           { type:    'confirm',
             name:    'hasDatabase',
@@ -79,8 +97,8 @@ var YoDjangoGenerator = yeoman.generators.Base.extend({
                    { type:    'list',
                      name:    'dbType',
                      message: 'DB: What database do you need?',
-                     choices: ['PostgreSQL', 'MySQL'],
-                     default: 'PostgreSQL', },
+                     choices: ['postgres', 'mysql'],
+                     default: 'postgres', },
  
                    { type:    'input',
                      name:    'dbName',
@@ -119,16 +137,21 @@ var YoDjangoGenerator = yeoman.generators.Base.extend({
                  'wsgi.py',
                  'README',
                  'deploy/nginx.conf',
-                 'deploy/uwsgi_upstart.conf'],
+                 'manifests/default.pp',
+                 ];
 
-            c = ['manage.py',],
+        if (this.answers.provisioner == 'puppet')
+            t.push('manifests/default.pp');
+
+        var c = ['manage.py',
+                 'deploy/uwsgi_upstart.conf'],
 
             d = ['deploy',
                  'docs',
                  'fixtures',
                  'libs',
                  'locale',
-                 'packer',
+                 'manifests',
                  this.answers.projectName];
 
         for (var i = 0; i < d.length; i++) {
@@ -137,11 +160,13 @@ var YoDjangoGenerator = yeoman.generators.Base.extend({
 
         for (var i = 0; i < t.length; i++) {
             this.log('Generating ' + t[i]);
-            this.template('_' + t[i],  t[i], this.answers);
+            var n = t[i].split('/');
+            n[n.length-1] = '_' + n[n.length-1];
+            this.template(n.join('/'), t[i], this.answers);
         }
 
         for (var i = 0; i < c.length; i++) {
-            this.copy(c, c);
+            this.copy(c[i], c[i]);
         }
 
     },

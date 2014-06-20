@@ -20,13 +20,61 @@ mkdir /www && ln -s /vagrant <%= wwwDir %>
 
 
 # Update package cache
-apt-get update -q -y
+apt-get update -qy
 
 
-# Install various app requirements
-apt-get install -q -y python python-pip
+# Install installers
+apt-get install -qy python python-pip software-properties-common
 pip install --upgrade pip
 ln -s /usr/local/bin/pip /usr/bin/pip
+
+
+# Add extra PPAs
+<% if (server == 'nginx') { %>
+apt-add-repository ppa:nginx/development
+<% } %>
+apt-get update -qy
+
+
+# Install selected server
+<% if (server == 'nginx') { %>
+sudo apt-get install nginx
+<% } %>
+
+
+# Install selected database
+<% if (dbType == 'mysql') { %>
+echo 'mysql-server mysql-server/root_password password thisisthedefaultmysqlrootpassword' | debconf-set-selections
+echo 'mysql-server mysql-server/root_password_again password thisisthedefaultmysqlrootpassword' | debconf-set-selections
+apt-get install -q -y mysql-server python-mysqldb
+mysql -u root --password=thisisthedefaultmysqlrootpassword -e \
+    "CREATE DATABASE <%= dbName %> DEFAULT CHARACTER SET utf8 DEFAULT COLLATE utf8_general_ci;"
+mysql -u root --password=thisisthedefaultmysqlrootpassword -e \
+    "GRANT ALL PRIVILEGES ON <%= dbName %>.* To '<%= dbUser %>'@'localhost' IDENTIFIED BY '$DB_PASSWORD';"
+<% } %>
+
+
+<% if (dbType == 'postgres') { %>
+# Install Postgres
+apt-get -y install postgresql-9.3 postgresql-client-9.3 libpq-dev
+
+# Rename old configuration files and add new ones
+mv /etc/postgresql/9.3/main/postgresql.conf /etc/postgresql/9.3/main/postgresql.conf.old
+mv /etc/postgresql/9.3/main/pg_hba.conf /etc/postgresql/9.3/main/pg_hba.conf.old
+cp /vagrant/deploy/postgresql.conf /etc/postgresql/9.3/main/postgresql.conf
+cp /vagrant/deploy/pg_hba.conf /etc/postgresql/9.3/main/pg_hba.conf
+
+# Restart server and setup database
+service postgresql restart
+sudo -u postgres createdb <%= dbName %> -E=utf8
+sudo -u postgres createuser <%= dbUser %> -d
+<% } %>
+
+
+
+
+
+# Install required Python libraries
 pip install --requirement <%= wwwDir %>/requirements.txt
 
 
@@ -49,27 +97,9 @@ chown --recursive <%= projectUser %>:<%= projectGroup %> /www/static
 find /www/static -type f -exec chmod 664 {} +
 
 
-<% if (dbType == 'mysql') { %>
-# Create a MySQL database and user
-mysql -u root --password=thisisthedefaultmysqlrootpassword -e \
-    "CREATE DATABASE <%= dbName %> DEFAULT CHARACTER SET utf8 DEFAULT COLLATE utf8_general_ci;"
-
-mysql -u root --password=thisisthedefaultmysqlrootpassword -e \
-    "GRANT ALL PRIVILEGES ON <%= dbName %>.* To '<%= dbUser %>'@'localhost' IDENTIFIED BY '$DB_PASSWORD';"
-<% } %>
-
-
-<% if (dbType == 'postgres') { %>
-# Create database and Postgres user
-sudo -u postgres createdb <%= dbName %> -E=utf8
-sudo -u postgres createuser <%= dbUser %> -d
-<% } %>
-
-
 # Install PhantomJS
 # curl -s https://phantomjs.googlecode.com/files/phantomjs-1.9.2-linux-x86_64.tar.bz2 | tar --no-anchored -xj bin/phantomjs -O > /usr/bin/phantomjs
 # chmod 777 /usr/bin/phantomjs
-
 
 
 # Install and configure nginx and uwsgi
@@ -80,7 +110,6 @@ mkdir -p /var/log/uwsgi
 chmod 774 <%= logDir %> /var/log/nginx /var/log/uwsgi
 chown --recursive nginx:<%= projectGroup %> /var/log/nginx
 chown --recursive uwsgi:<%= projectGroup %> /var/log/uwsgi
-
 
 
 # Sync DB and load initial data
