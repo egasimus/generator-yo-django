@@ -1,10 +1,12 @@
-$inline = <<SCRIPT
+<% if (provisioner == 'puppet') { %>
+$bootstrap_puppet = <<SCRIPT
 /usr/bin/puppet module install maestrodev-wget       || true
 /usr/bin/puppet module install puppetlabs-apt        || true
 <% if (dbType == 'PostgreSQL') { %>
 /usr/bin/puppet module install puppetlabs-postgresql || true
 <% } %>
 SCRIPT
+<% } %>
 
 <% if (fix12879) { %>
 
@@ -27,9 +29,18 @@ Vagrant.configure("2") do |config|
   config.vm.box = "<%= baseBoxName %>"
   config.vm.box_url = "<%= baseBoxURL %>"
   
-  <% if (fix12879) { %>config.vm.provision "shell", inline: $fix12879<% } %>
-  config.vm.provision "shell", inline: $inline
+  <% if (fix12879) { %>
+  config.vm.provision "shell", inline: $fix12879
+  <% } %>
+
+  <% if (provisioner == 'puppet') { %>
+  config.vm.provision "shell", inline: $bootstrap_puppet
   config.vm.provision "puppet"
+  <% } %>
+
+  <% if (provisioner == 'shell') { %>
+  config.vm.provision "shell", path: "provision.sh"
+  <% } %>
 
   config.vm.network :private_network, ip: "<%= hostIP %>"
 

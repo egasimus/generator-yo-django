@@ -19,9 +19,15 @@ useradd ubuntu -G <%= projectGroup %> || usermod ubuntu -G <%= projectGroup %>
 mkdir /www && ln -s /vagrant <%= wwwDir %>
 
 
+# Update package cache
+apt-get update -q -y
+
+
 # Install various app requirements
-apt-get update -q -y && apt-get install -q -y uwsgi uwsgi-plugin-python
-pip install --requirement <%= wwwDir %>/app-requirements.txt
+apt-get install -q -y python python-pip
+pip install --upgrade pip
+ln -s /usr/local/bin/pip /usr/bin/pip
+pip install --requirement <%= wwwDir %>/requirements.txt
 
 
 # Prepare app's static, media, and log directories.
@@ -43,17 +49,27 @@ chown --recursive <%= projectUser %>:<%= projectGroup %> /www/static
 find /www/static -type f -exec chmod 664 {} +
 
 
+<% if (dbType == 'mysql') { %>
 # Create a MySQL database and user
 mysql -u root --password=thisisthedefaultmysqlrootpassword -e \
     "CREATE DATABASE <%= dbName %> DEFAULT CHARACTER SET utf8 DEFAULT COLLATE utf8_general_ci;"
 
 mysql -u root --password=thisisthedefaultmysqlrootpassword -e \
     "GRANT ALL PRIVILEGES ON <%= dbName %>.* To '<%= dbUser %>'@'localhost' IDENTIFIED BY '$DB_PASSWORD';"
+<% } %>
+
+
+<% if (dbType == 'postgres') { %>
+# Create database and Postgres user
+sudo -u postgres createdb <%= dbName %> -E=utf8
+sudo -u postgres createuser <%= dbUser %> -d
+<% } %>
 
 
 # Install PhantomJS
 # curl -s https://phantomjs.googlecode.com/files/phantomjs-1.9.2-linux-x86_64.tar.bz2 | tar --no-anchored -xj bin/phantomjs -O > /usr/bin/phantomjs
 # chmod 777 /usr/bin/phantomjs
+
 
 
 # Install and configure nginx and uwsgi
@@ -65,10 +81,6 @@ chmod 774 <%= logDir %> /var/log/nginx /var/log/uwsgi
 chown --recursive nginx:<%= projectGroup %> /var/log/nginx
 chown --recursive uwsgi:<%= projectGroup %> /var/log/uwsgi
 
-
-# Create database and Postgres user
-# sudo -u postgres createdb <%= dbName %> -E=utf8
-# sudo -u postgres createuser <%= dbUser %> -d
 
 
 # Sync DB and load initial data
