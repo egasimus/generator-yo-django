@@ -73,6 +73,12 @@ var YoDjangoGenerator = yeoman.generators.Base.extend({
             choices: ['uwsgi', 'gunicorn'],
             default: 'uwsgi' },
 
+          { type:    'list',
+            name:    'cache',
+            message: 'Cache server:',
+            choices: ['none', 'memcached'],
+            default: 'memcached' },
+
           { type:    'confirm',
             name:    'hasDatabase',
             message: 'Will you be needing a database?',
@@ -187,7 +193,9 @@ var YoDjangoGenerator = yeoman.generators.Base.extend({
 
         // Copy rest of files
 
-        var c = ['manage.py',
+        var c = ['__init__.py',
+                 'manage.py',
+                 'project/__init__.py',
                  'project/conf/__init__.py'];
 
         if (answers.wsgi === 'uwsgi')

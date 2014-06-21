@@ -61,7 +61,7 @@ service uwsgi restart
 <% if (dbType === 'mysql') { %>
 echo 'mysql-server mysql-server/root_password password thisisthedefaultmysqlrootpassword' | debconf-set-selections
 echo 'mysql-server mysql-server/root_password_again password thisisthedefaultmysqlrootpassword' | debconf-set-selections
-apt-get install -q -y mysql-server python-mysqldb
+apt-get -qy install mysql-server python-mysqldb
 mysql -u root --password=thisisthedefaultmysqlrootpassword -e \
     "CREATE DATABASE <%= dbName %> DEFAULT CHARACTER SET utf8 DEFAULT COLLATE utf8_general_ci;"
 mysql -u root --password=thisisthedefaultmysqlrootpassword -e \
@@ -70,7 +70,7 @@ mysql -u root --password=thisisthedefaultmysqlrootpassword -e \
 
 
 <% if (dbType === 'postgres') { %>
-apt-get -y install postgresql-9.3 postgresql-client-9.3 libpq-dev
+apt-get -qy install postgresql-9.3 postgresql-client-9.3 libpq-dev
 mv /etc/postgresql/9.3/main/postgresql.conf /etc/postgresql/9.3/main/postgresql.conf.old
 mv /etc/postgresql/9.3/main/pg_hba.conf /etc/postgresql/9.3/main/pg_hba.conf.old
 cp /vagrant/deploy/postgresql.conf /etc/postgresql/9.3/main/postgresql.conf
@@ -78,6 +78,11 @@ cp /vagrant/deploy/pg_hba.conf /etc/postgresql/9.3/main/pg_hba.conf
 service postgresql restart
 sudo -u postgres createdb <%= dbName %> -E=utf8
 sudo -u postgres createuser <%= dbUser %> -d
+<% } %>
+
+
+<% if (cache === 'memcached') { %>
+apt-get -qy install memcached
 <% } %>
 
 
