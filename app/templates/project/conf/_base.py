@@ -108,7 +108,6 @@ INSTALLED_APPS = (
 
     'devserver',
     'south',
-    'authority',
 )
 
 

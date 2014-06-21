@@ -4,7 +4,7 @@ var path = require('path');
 var yeoman = require('yeoman-generator');
 var yosay = require('yosay');
 var chalk = require('chalk');
-
+var prettyjson = require('prettyjson');
 
 
 var YoDjangoGenerator = yeoman.generators.Base.extend({
@@ -27,10 +27,6 @@ var YoDjangoGenerator = yeoman.generators.Base.extend({
     askFor: function () {
         var self = this;
         var done = this.async();
-
-        this.log(yosay('Uh, hi? I\'m the "django-egasimus" generator you asked for...'));
-        this.log(yosay('...and I\'m going to set up your Django+Vagrant project...'));
-        this.log(yosay('...because fuck you, that\'s why.'));
 
         var prompts = [
           { type:    'input',
@@ -135,46 +131,76 @@ var YoDjangoGenerator = yeoman.generators.Base.extend({
 
 
     app: function () {
-   
-        var t = ['fabfile.py',
-                 'Vagrantfile',
-                 'provision.sh',
-                 'requirements.txt',
-                 'wsgi.py',
-                 'README',
-                 'deploy/nginx.conf',
-                 'manifests/default.pp',
-                 ];
 
-        if (this.answers.provisioner == 'puppet')
-            t.push('manifests/default.pp');
+        var answers = this.answers;
 
-        var c = ['manage.py',
-                 'deploy/uwsgi_upstart.conf',
-                 'deploy/pg_hba.conf',
-                 'deploy/postgresql.conf'],
+        this.log(prettyjson.render(answers));
 
-            d = ['deploy',
+        // Make directories
+
+        var p = function(dir) {return answers.projectName + '/' + dir}
+        
+        var d = ['deploy',
                  'docs',
                  'fixtures',
                  'libs',
                  'locale',
-                 'manifests',
-                 this.answers.projectName];
+                 p(''),
+                 p('apps'),
+                 p('conf'),
+                 p('static'),
+                 p('template'),
+                ];
 
-        for (var i = 0; i < d.length; i++) {
-            this.mkdir(d[i]);
-        }
+        if (answers.provisioner === 'puppet')
+            d = d.concat(['manifests']);
+
+        for (var i = 0; i < d.length; i++) this.mkdir(d[i]);
+
+        // Process templates
+    
+        var t = ['fabfile.py',
+                 'Vagrantfile',
+                 'requirements.txt',
+                 'wsgi.py',
+                 'README',
+                 'project/conf/base.py',
+                 'project/conf/dev.py'];
+
+        if (answers.provisioner === 'puppet')
+            t = t.concat(['manifests/default.pp']);
+
+        if (answers.provisioner === 'shell')
+            t = t.concat(['provision.sh']);
+
+        if (answers.provisioner === 'server');
+            t = t.concat(['deploy/nginx.conf']);
 
         for (var i = 0; i < t.length; i++) {
             this.log('Generating ' + t[i]);
-            var n = t[i].split('/');
+            var n  = t[i].split('/'),
+                n2 = t[i].split('/');
             n[n.length-1] = '_' + n[n.length-1];
-            this.template(n.join('/'), t[i], this.answers);
+            if (n2[0] === 'project') n2[0] = answers.projectName;
+            this.template(n.join('/'), n2.join('/'), answers);
         }
 
+        // Copy rest of files
+
+        var c = ['manage.py',
+                 'project/conf/__init__.py'];
+
+        if (answers.wsgi === 'uwsgi')
+            c = c.concat(['deploy/uwsgi_upstart.conf',]);
+
+        if (answers.dbType === 'postgres')
+            c = c.concat(['deploy/pg_hba.conf',
+                          'deploy/postgresql.conf',]);
+
         for (var i = 0; i < c.length; i++) {
-            this.copy(c[i], c[i]);
+            var n = c[i].split('/');
+            if (n[0] === 'project') n[0] = answers.projectName;
+            this.copy(c[i], n.join('/'));
         }
 
     },

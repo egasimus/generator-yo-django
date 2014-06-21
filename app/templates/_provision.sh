@@ -125,7 +125,7 @@ python <%= wwwDir %>/manage.py migrate
 
 
 # Upload crontab
-cp <%= wwwDir %>/deploy/crontab.conf /etc/cron.d/<%= projectName %>
+# cp <%= wwwDir %>/deploy/crontab.conf /etc/cron.d/<%= projectName %>
 
 
 # Configure and launch uWSGI
