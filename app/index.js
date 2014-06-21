@@ -144,7 +144,9 @@ var YoDjangoGenerator = yeoman.generators.Base.extend({
             t.push('manifests/default.pp');
 
         var c = ['manage.py',
-                 'deploy/uwsgi_upstart.conf'],
+                 'deploy/uwsgi_upstart.conf',
+                 'deploy/pg_hba.conf',
+                 'deploy/postgresql.conf'],
 
             d = ['deploy',
                  'docs',
