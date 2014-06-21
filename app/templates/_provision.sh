@@ -33,12 +33,27 @@ ln -s /usr/local/bin/pip /usr/bin/pip
 <% if (server === 'nginx') { %>
 apt-add-repository -y ppa:nginx/development
 <% } %>
+<% if (wsgi === 'uwsgi') { %>
+apt-add-repository -y ppa:chris-lea/uwsgi
+<% } %>
 apt-get update -qy
 
 
 # Install selected server
 <% if (server === 'nginx') { %>
 apt-get install -qy nginx
+<% } %>
+
+
+# Install selected WSGI server
+<% if (wsgi === 'uwsgi') { %>
+apt-get install -qy uwsgi 
+cp /vagrant/deploy/uwsgi_upstart.conf /etc/init/uwsgi.conf
+chmod 0644 /etc/init/uwsgi.conf
+mkdir -p /etc/uwsgi/vassals && chmod 770 /etc/uwsgi/vassals
+chown --recursive uwsgi:<%= projectGroup %> /etc/uwsgi/vassals
+ln -s /vagrant/deploy/uwsgi_dev.ini /etc/uwsgi/vassals/<%= projectName %>.ini
+service uwsgi restart
 <% } %>
 
 
@@ -55,16 +70,11 @@ mysql -u root --password=thisisthedefaultmysqlrootpassword -e \
 
 
 <% if (dbType === 'postgres') { %>
-# Install Postgres
 apt-get -y install postgresql-9.3 postgresql-client-9.3 libpq-dev
-
-# Rename old configuration files and add new ones
 mv /etc/postgresql/9.3/main/postgresql.conf /etc/postgresql/9.3/main/postgresql.conf.old
 mv /etc/postgresql/9.3/main/pg_hba.conf /etc/postgresql/9.3/main/pg_hba.conf.old
 cp /vagrant/deploy/postgresql.conf /etc/postgresql/9.3/main/postgresql.conf
 cp /vagrant/deploy/pg_hba.conf /etc/postgresql/9.3/main/pg_hba.conf
-
-# Restart server and setup database
 service postgresql restart
 sudo -u postgres createdb <%= dbName %> -E=utf8
 sudo -u postgres createuser <%= dbUser %> -d
@@ -119,14 +129,6 @@ cp <%= wwwDir %>/deploy/crontab.conf /etc/cron.d/<%= projectName %>
 
 
 # Configure and launch uWSGI
-cp /vagrant/deploy/uwsgi_upstart.conf /etc/init/uwsgi.conf
-chmod 0644 /etc/init/uwsgi.conf
-mkdir -p /etc/uwsgi/vassals
-chmod 770 /etc/uwsgi/vassals
-chown --recursive uwsgi:<%= projectGroup %> /etc/uwsgi/vassals
-ln -s /vagrant/deploy/uwsgi_dev.ini /etc/uwsgi/vassals/<%= projectName %>.ini
-service uwsgi restart
-
 
 # Configure and launch nginx
 ln -s /vagrant/deploy/nginx_dev.conf /etc/nginx/sites-available/<%= projectName %>

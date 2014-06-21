@@ -67,9 +67,15 @@ var YoDjangoGenerator = yeoman.generators.Base.extend({
 
           { type:    'list',
             name:    'server',
-            message: 'Your server of choice:',
+            message: 'HTTP server:',
             choices: ['nginx', 'apache'],
             default: 'nginx', },
+
+          { type:    'list',
+            name:    'wsgi',
+            message: 'WSGI app server:',
+            choices: ['uwsgi', 'gunicorn'],
+            default: 'uwsgi' },
 
           { type:    'confirm',
             name:    'hasDatabase',
