@@ -29,21 +29,21 @@ pip install --upgrade pip
 ln -s /usr/local/bin/pip /usr/bin/pip
 
 
-# Add extra PPAs
-<% if (server == 'nginx') { %>
-apt-add-repository ppa:nginx/development
+# Add extra PPAs and update again
+<% if (server === 'nginx') { %>
+apt-add-repository -y ppa:nginx/development
 <% } %>
 apt-get update -qy
 
 
 # Install selected server
-<% if (server == 'nginx') { %>
-sudo apt-get install nginx
+<% if (server === 'nginx') { %>
+apt-get install -qy nginx
 <% } %>
 
 
 # Install selected database
-<% if (dbType == 'mysql') { %>
+<% if (dbType === 'mysql') { %>
 echo 'mysql-server mysql-server/root_password password thisisthedefaultmysqlrootpassword' | debconf-set-selections
 echo 'mysql-server mysql-server/root_password_again password thisisthedefaultmysqlrootpassword' | debconf-set-selections
 apt-get install -q -y mysql-server python-mysqldb
@@ -54,7 +54,7 @@ mysql -u root --password=thisisthedefaultmysqlrootpassword -e \
 <% } %>
 
 
-<% if (dbType == 'postgres') { %>
+<% if (dbType === 'postgres') { %>
 # Install Postgres
 apt-get -y install postgresql-9.3 postgresql-client-9.3 libpq-dev
 
@@ -69,9 +69,6 @@ service postgresql restart
 sudo -u postgres createdb <%= dbName %> -E=utf8
 sudo -u postgres createuser <%= dbUser %> -d
 <% } %>
-
-
-
 
 
 # Install required Python libraries
