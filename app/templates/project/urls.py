@@ -8,8 +8,7 @@ admin.autodiscover()
 
 
 urlpatterns = patterns('',
-    url(r'^admin/', include(admin_site.urls), name='admin'),
-    url(r'^$', cached(cms.views.HomepageView.as_view()), name='index'))
+    url(r'^admin/', include(admin.site.urls), name='admin'))
 
 
 if settings.SERVE_STATIC:  # defaults to DEBUG

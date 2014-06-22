@@ -195,7 +195,9 @@ var YoDjangoGenerator = yeoman.generators.Base.extend({
 
         var c = ['__init__.py',
                  'manage.py',
+                 'project/apps.pth',
                  'project/__init__.py',
+                 'project/urls.py',
                  'project/conf/__init__.py'];
 
         if (answers.wsgi === 'uwsgi')
