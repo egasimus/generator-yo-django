@@ -6,4 +6,4 @@ django-devserver==0.7.0
 django-model-utils==2.0
 <% if (cache === 'memcached') { %>python-memcached==1.53<% } %>
 <% if (dbType === 'mysql') { %>MySQL-python==1.2.5<% } %>
-<% if (dbType === 'postgres') { %>psycopg==1.1.21<% } %>
+<% if (dbType === 'postgres') { %>psycopg2==2.5<% } %>

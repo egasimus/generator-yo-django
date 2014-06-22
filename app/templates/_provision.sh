@@ -24,7 +24,7 @@ apt-get update -qy
 
 
 # Install installers
-apt-get install -qy python python-pip software-properties-common
+apt-get install -qy python python-dev python-pip software-properties-common
 pip install --upgrade pip
 ln -s /usr/local/bin/pip /usr/bin/pip
 
