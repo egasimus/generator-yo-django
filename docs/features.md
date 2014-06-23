@@ -20,6 +20,7 @@ Virtualization
 
 #### Vagrant providers
 * [**VirtualBox**](https://www.virtualbox.org/) &mdash; a free virtualization engine from Oracle.
+* `todo` [**AWS**](https://github.com/mitchellh/vagrant-aws) &mdash; a major goal of yo-django is to generate projects which can be deployed to cloud services with minimum fuss.
 * `todo` [**Docker**](http://www.docker.com) &mdash; a containerization engine for Linux which offers most of the benefits of a virtual server for your app without incurring the significant resource overhead of a full-blown VM.
 
 #### Vagrant provisioners:
