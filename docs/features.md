@@ -3,7 +3,9 @@ Features
 
 This is a list of all the currently supported or planned features of yo-django, roughly corresponding to some of the choices you might be offered when running the generator itself.
 
-### Web frameworks
+Web frameworks
+---
+
 * **Django** &mdash; http://www.djangoproject.com
 
 #### Django project templates
@@ -17,7 +19,9 @@ This is a list of all the currently supported or planned features of yo-django, 
 * **mini** &mdash; A lightweight project not necessarily needing a database,
   inspired by [Syte](https://github.com/rigoneri/syte) and [Meghan Blanchette's *Simplifying Django*](http://radar.oreilly.com/2014/04/simplifying-django.html?utm_source=Python+Weekly+Newsletter&utm_campaign=ef1c091c06-Python_Weekly_Issue_135_April_17_2014&utm_medium=email&utm_term=0_9e26887fc5-ef1c091c06-312699433).
 
-### Virtualization
+Virtualization
+---
+
 * [**Vagrant**](http://www.vagrantup.com) &mdash; a convenient solution for automated management of virtual machines.
 
 #### Vagrant providers
@@ -36,7 +40,8 @@ This is a list of all the currently supported or planned features of yo-django, 
 * [**Chef**](https://docs.vagrantup.com/v2/provisioning/ansible.html)
 * [**Ansible**](https://docs.vagrantup.com/v2/provisioning/ansible.html)
 
-### Databases
+Databases
+---
 
 * [**PostgreSQL**](http://www.postgresql.org)
 
@@ -47,6 +52,7 @@ This is a list of all the currently supported or planned features of yo-django, 
 * [**SQLite**](http://www.sqlite.org/)?
 * [**Non-relational databases**](http://django-nonrel.org/)?
 
-### Services
+Services
+---
 
 * [**memcached**](http://memcached.org/)
