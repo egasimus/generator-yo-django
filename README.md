@@ -13,7 +13,9 @@ Compared to old-fashioned PHP, the time we save by writing high-level abstractio
 Project status
 ---
 
-This project is in a pre-alpha stage right now; that said, as long as you stick to the default options, you should end up with something working. However, I currently have little time to develop things beyond my own preferred setup. This is why I am hoping the brilliant Django community will pick this up and implement the various bits that differ from my own preference. Databases, services, cloud platforms, even other Python frameworks -- you name it. All tickets and pull requests welcome.
+This project is in a pre-alpha stage right now; that said, as long as you stick to the default options, you should end up with something working. That's not much, I know. However, I currently have little time to develop things beyond my own preferred setup. This is why I am hoping the brilliant Django community will pick this up and implement the various bits that differ from my own preference. Databases, services, cloud platforms, even other Python frameworks -- you name it. All tickets and pull requests welcome.
+
+See what the defaults are &mdash; and whether they're any good for you &mdash; as well as what's in store for the future at the [features page](https://github.com/egasimus/generator-yo-django/blob/master/docs/features.md).
 
 Current goals
 ---
