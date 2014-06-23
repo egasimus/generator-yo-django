@@ -20,7 +20,17 @@ Web frameworks
 * `todo` Custom **permissions** with [Authority](https://github.com/jezdez/django-authority)
 * `toto` **APIs** with [Django REST framework](http://www.django-rest-framework.org/) and [Tastypie](http://tastypieapi.org/)
 
-Virtualization
+Databases and services
+---
+
+* [**PostgreSQL**](http://www.postgresql.org)
+* [**memcached**](http://memcached.org/)
+* `wip` [**MySQL**](http://www.mysql.com/)
+* `todo` [**SQLite**](http://www.sqlite.org/)
+* `todo` [**MongoDB**](http://django-nonrel.org/)
+* `todo` [**redis**](http://redis.io/)
+
+Infrastructure
 ---
 
 * [**Vagrant**](http://www.vagrantup.com) &mdash; a convenient solution for automated management of virtual machines.
@@ -35,17 +45,3 @@ Virtualization
 * `wip` [**Puppet**](https://docs.vagrantup.com/v2/provisioning/puppet_apply.html)
 * `todo` [**Chef**](https://docs.vagrantup.com/v2/provisioning/ansible.html)
 * `todo` [**Ansible**](https://docs.vagrantup.com/v2/provisioning/ansible.html)
-
-Databases
----
-
-* [**PostgreSQL**](http://www.postgresql.org)
-* `wip` [**MySQL**](http://www.mysql.com/)
-* `todo` [**SQLite**](http://www.sqlite.org/)
-* `todo` [**MongoDB**](http://django-nonrel.org/)
-
-Services
----
-
-* [**memcached**](http://memcached.org/)
-* `todo` [**redis**](http://redis.io/)
