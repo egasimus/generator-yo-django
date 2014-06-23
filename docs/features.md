@@ -34,10 +34,11 @@ Databases
 
 * [**PostgreSQL**](http://www.postgresql.org)
 * `wip` [**MySQL**](http://www.mysql.com/)
-* `todo` [**SQLite**](http://www.sqlite.org/)?
-* `todo` [**Non-relational databases**](http://django-nonrel.org/)?
+* `todo` [**SQLite**](http://www.sqlite.org/)
+* `todo` [**MongoDB**](http://django-nonrel.org/)
 
 Services
 ---
 
 * [**memcached**](http://memcached.org/)
+* `todo`[**redis**](http://redis.io/)
