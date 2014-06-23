@@ -1,47 +1,22 @@
-# generator-django-egasimus [![Build Status](https://secure.travis-ci.org/egasimus/generator-django-egasimus.png?branch=master)](https://travis-ci.org/egasimus/generator-django-egasimus)
+Yo, Django!
+===
 
-> [Yeoman](http://yeoman.io) generator
+[insert relevant gif of Jamie Foxx turning around]
 
+Introduction
+---
 
-## Getting Started
+[Django](https://www.djangoproject.com/) is freaking *great*. So is [Vagrant](http://www.vagrantup.com/). However, one of the main difficulties that I encounter in my day-to-day work as a Django developer involve setting up a project, as well as deploying what I build to an actual production server. Both involve a fair share of, well, *bureaucracy*, and I am embarrased to say that, for me, starting a new Django project usually involves copying over a previous one and deleting all irrelevant bits, then hoping nobody sees those few instances of the old project's name that I only notice after a few commits.
 
-### What is Yeoman?
+Compared to old-fashioned PHP, the time we save by writing high-level abstractions in a sane programming language, we lose in preparing a project that can be deployed to our own platform of choice. This is where [Yeoman](http://yeoman.io/) comes in. Answer a bunch of questions at an user-friendly console interface and get the scaffolding for a full-blown, production-ready, [twelve-factor](http://12factor.net/)-conformant modern Web application, so you can immediately get started writing business logic -- what could be better than that?
 
-Trick question. It's not a thing. It's this guy:
+Project status
+---
 
-![](http://i.imgur.com/JHaAlBJ.png)
+This project is in a pre-alpha stage right now; that said, as long as you stick to the default options, you should end up with something working. However, I currently have little time to develop things beyond my own preferred setup. This is why I am hoping the brilliant Django community will pick this up and implement the various bits that differ from my own preference. Databases, services, cloud platforms, even other Python frameworks -- you name it. All tickets and pull requests welcome.
 
-Basically, he wears a top hat, lives in your computer, and waits for you to tell him what kind of application you wish to create.
+Current goals
+---
 
-Not every new computer comes with a Yeoman pre-installed. He lives in the [npm](https://npmjs.org) package repository. You only have to ask for him once, then he packs up and moves into your hard drive. *Make sure you clean up, he likes new and shiny things.*
-
-```bash
-$ npm install -g yo
-```
-
-### Yeoman Generators
-
-Yeoman travels light. He didn't pack any generators when he moved in. You can think of a generator like a plug-in. You get to choose what type of application you wish to create, such as a Backbone application or even a Chrome extension.
-
-To install generator-django-egasimus from npm, run:
-
-```bash
-$ npm install -g generator-django-egasimus
-```
-
-Finally, initiate the generator:
-
-```bash
-$ yo django-egasimus
-```
-
-### Getting To Know Yeoman
-
-Yeoman has a heart of gold. He's a person with feelings and opinions, but he's very easy to work with. If you think he's too opinionated, he can be easily convinced.
-
-If you'd like to get to know Yeoman better and meet some of his friends, [Grunt](http://gruntjs.com) and [Bower](http://bower.io), check out the complete [Getting Started Guide](https://github.com/yeoman/yeoman/wiki/Getting-Started).
-
-
-## License
-
-MIT
+* Get MySQL running.
+* Re-implement at least the default setup in [Puppet](http://puppetlabs.com/).
