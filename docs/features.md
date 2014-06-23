@@ -41,4 +41,4 @@ Services
 ---
 
 * [**memcached**](http://memcached.org/)
-* `todo`[**redis**](http://redis.io/)
+* `todo` [**redis**](http://redis.io/)
