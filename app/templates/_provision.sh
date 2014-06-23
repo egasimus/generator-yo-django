@@ -48,11 +48,11 @@ apt-get install -qy nginx
 # Install selected WSGI server
 <% if (wsgi === 'uwsgi') { %>
 apt-get install -qy uwsgi 
-cp /vagrant/deploy/uwsgi_upstart.conf /etc/init/uwsgi.conf
+cp /vagrant/config/uwsgi_upstart.conf /etc/init/uwsgi.conf
 chmod 0644 /etc/init/uwsgi.conf
 mkdir -p /etc/uwsgi/vassals && chmod 770 /etc/uwsgi/vassals
 chown --recursive uwsgi:<%= projectGroup %> /etc/uwsgi/vassals
-ln -s /vagrant/deploy/uwsgi_dev.ini /etc/uwsgi/vassals/<%= projectName %>.ini
+ln -s /vagrant/config/uwsgi_dev.ini /etc/uwsgi/vassals/<%= projectName %>.ini
 service uwsgi restart
 <% } %>
 
@@ -73,8 +73,8 @@ mysql -u root --password=thisisthedefaultmysqlrootpassword -e \
 apt-get -qy install postgresql-9.3 postgresql-client-9.3 libpq-dev
 mv /etc/postgresql/9.3/main/postgresql.conf /etc/postgresql/9.3/main/postgresql.conf.old
 mv /etc/postgresql/9.3/main/pg_hba.conf /etc/postgresql/9.3/main/pg_hba.conf.old
-cp /vagrant/deploy/postgresql.conf /etc/postgresql/9.3/main/postgresql.conf
-cp /vagrant/deploy/pg_hba.conf /etc/postgresql/9.3/main/pg_hba.conf
+cp /vagrant/config/postgresql.conf /etc/postgresql/9.3/main/postgresql.conf
+cp /vagrant/config/pg_hba.conf /etc/postgresql/9.3/main/pg_hba.conf
 service postgresql restart
 sudo -u postgres createdb <%= dbName %> -E=utf8
 sudo -u postgres createuser <%= dbUser %> -d
@@ -130,13 +130,13 @@ python <%= wwwDir %>/manage.py migrate
 
 
 # Upload crontab
-# cp <%= wwwDir %>/deploy/crontab.conf /etc/cron.d/<%= projectName %>
+# cp <%= wwwDir %>/config/crontab.conf /etc/cron.d/<%= projectName %>
 
 
 # Configure and launch uWSGI
 
 # Configure and launch nginx
-ln -s /vagrant/deploy/nginx_dev.conf /etc/nginx/sites-available/<%= projectName %>
+ln -s /vagrant/config/nginx.conf /etc/nginx/sites-available/<%= projectName %>
 ln -s /etc/nginx/sites-available/<%= projectName %> /etc/nginx/sites-enabled/
 unlink /etc/nginx/sites-enabled/default
 service nginx restart

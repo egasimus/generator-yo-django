@@ -146,7 +146,7 @@ var YoDjangoGenerator = yeoman.generators.Base.extend({
 
         var p = function(dir) {return answers.projectName + '/' + dir}
         
-        var d = ['deploy',
+        var d = ['config',
                  'docs',
                  'fixtures',
                  'libs',
@@ -180,7 +180,7 @@ var YoDjangoGenerator = yeoman.generators.Base.extend({
             t = t.concat(['provision.sh']);
 
         if (answers.provisioner === 'server');
-            t = t.concat(['deploy/nginx.conf']);
+            t = t.concat(['config/nginx.conf']);
 
         for (var i = 0; i < t.length; i++) {
             this.log('Generating ' + t[i]);
@@ -201,11 +201,11 @@ var YoDjangoGenerator = yeoman.generators.Base.extend({
                  'project/conf/__init__.py'];
 
         if (answers.wsgi === 'uwsgi')
-            c = c.concat(['deploy/uwsgi_upstart.conf',]);
+            c = c.concat(['config/uwsgi_upstart.conf',]);
 
         if (answers.dbType === 'postgres')
-            c = c.concat(['deploy/pg_hba.conf',
-                          'deploy/postgresql.conf',]);
+            c = c.concat(['config/pg_hba.conf',
+                          'config/postgresql.conf',]);
 
         for (var i = 0; i < c.length; i++) {
             var n = c[i].split('/');
