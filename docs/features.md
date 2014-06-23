@@ -23,7 +23,7 @@ Virtualization
 * `todo` [**Docker**](http://www.docker.com) &mdash; a containerization engine for Linux which offers most of the benefits of a virtual server for your app without incurring the significant resource overhead of a full-blown VM.
 
 #### Vagrant provisioners:
-* **shell** &mdash; Most of the provisioning is currently done by this sketchy shell script that took me a while to get right. This isn't particularly convenient for medium to large project, therefore I'd like to eventually migrate to...
+* **shell** &mdash; Most of the provisioning is currently done by this sketchy shell script that took me a while to get right. This isn't particularly convenient for medium to large projects, therefore I'd like to eventually migrate to...
 * `wip` [**Puppet**](https://docs.vagrantup.com/v2/provisioning/puppet_apply.html)
 * `todo` [**Chef**](https://docs.vagrantup.com/v2/provisioning/ansible.html)
 * `todo` [**Ansible**](https://docs.vagrantup.com/v2/provisioning/ansible.html)
