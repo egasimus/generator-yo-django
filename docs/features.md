@@ -18,7 +18,7 @@ Web frameworks
 * `todo` Custom **user model**
 * `todo` Custom **admin site**
 * `todo` Custom **permissions** with [Authority](https://github.com/jezdez/django-authority)
-* `toto` **APIs** with [Django REST framework](http://www.django-rest-framework.org/) and [Tastypie](http://tastypieapi.org/)
+* `todo` **APIs** with [Django REST framework](http://www.django-rest-framework.org/) and [Tastypie](http://tastypieapi.org/)
 
 Databases and services
 ---
@@ -33,7 +33,7 @@ Databases and services
 Infrastructure
 ---
 
-* [**Fabric**](http://www.fabfile.org/) is my management tool of choice which allows complex operations to be automated with single commands.
+* [**Fabric**](http://www.fabfile.org/) is my management tool of choice which allows complex operations &mdash; such as rebuilding a VM, running a test suite, or deploying to a remote location &mdash; to be automated with simple commands.
 * [**Vagrant**](http://www.vagrantup.com) &mdash; a convenient solution for automated management of virtual machines.
 
 #### Vagrant providers
