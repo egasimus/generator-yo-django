@@ -9,14 +9,9 @@ Web frameworks
 * **Django** &mdash; http://www.djangoproject.com
 
 #### Django project templates
-* **modern** &mdash; My current go-to project setup, refined from [nigma's *django-modern-template*](https://github.com/nigma/django-modern-template).
-
- Its main distinguishing feature is the `apps/` dir in the project root, which is then added to the PYTHONPATH so you can `import myapp` rather than `import apps.myapp`.
-
-* `todo` **basic** &mdash; The default Django setup, as created by
-  `manage.py startproject`.
-* `todo` **mini** &mdash; A lightweight project not necessarily needing a database,
-  inspired by [Syte](https://github.com/rigoneri/syte) and [Meghan Blanchette's *Simplifying Django*](http://radar.oreilly.com/2014/04/simplifying-django.html?utm_source=Python+Weekly+Newsletter&utm_campaign=ef1c091c06-Python_Weekly_Issue_135_April_17_2014&utm_medium=email&utm_term=0_9e26887fc5-ef1c091c06-312699433).
+* **modern** &mdash; My current go-to project setup, refined from [nigma's *django-modern-template*](https://github.com/nigma/django-modern-template). Its main distinguishing feature is the `apps/` dir in the project root, which is then added to the PYTHONPATH so you can `import myapp` rather than `import apps.myapp`.
+* `todo` **basic** &mdash; The default Django setup, as created by `manage.py startproject`.
+* `todo` **mini** &mdash; A lightweight project not necessarily needing a database, inspired by [Syte](https://github.com/rigoneri/syte) and [Meghan Blanchette's *Simplifying Django*](http://radar.oreilly.com/2014/04/simplifying-django.html?utm_source=Python+Weekly+Newsletter&utm_campaign=ef1c091c06-Python_Weekly_Issue_135_April_17_2014&utm_medium=email&utm_term=0_9e26887fc5-ef1c091c06-312699433).
 
 Virtualization
 ---
