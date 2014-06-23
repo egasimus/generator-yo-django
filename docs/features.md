@@ -13,6 +13,13 @@ Web frameworks
 * `todo` **basic** &mdash; The default Django setup, as created by `manage.py startproject`.
 * `todo` **mini** &mdash; A lightweight project not necessarily needing a database, inspired by [Syte](https://github.com/rigoneri/syte) and [Meghan Blanchette's *Simplifying Django*](http://radar.oreilly.com/2014/04/simplifying-django.html?utm_source=Python+Weekly+Newsletter&utm_campaign=ef1c091c06-Python_Weekly_Issue_135_April_17_2014&utm_medium=email&utm_term=0_9e26887fc5-ef1c091c06-312699433).
 
+#### Django features and niceties
+* `todo` **Social authentication**
+* `todo` Custom **user model**
+* `todo` Custom **admin site**
+* `todo` Custom **permissions** with [Authority](https://github.com/jezdez/django-authority)
+* `toto` **APIs** with [Django REST framework](http://www.django-rest-framework.org/) and [Tastypie](http://tastypieapi.org/)
+
 Virtualization
 ---
 
