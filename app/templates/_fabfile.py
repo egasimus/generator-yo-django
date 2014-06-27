@@ -72,14 +72,20 @@ def manage(c=""):
 
 
 @task(task_class=IdentityTask)
-def schema(app):
-    """ Execute schemamigration --auto. """
+def migrate(app):
+    """ Execute migration with --no-initial-data. """
+    manage.run('migrate {0} --no-initial-data'.format(app))
+
+
+@task(task_class=IdentityTask)
+def migration(app):
+    """ Create migration with --auto. """
     manage.run('schemamigration {0} --auto'.format(app))
 
 
 @task(task_class=IdentityTask)
-def schema_init(app):
-    """ Execute schemamigration --init. """
+def initmigration(app):
+    """ Create migration with --init. """
     manage.run('schemamigration {0} --initial'.format(app))
 
 
@@ -124,3 +130,12 @@ def restart():
     """ Restart production stack. """
     sudo('service uwsgi restart')
     sudo('service nginx restart')
+
+
+@task(task_class=IdentityTask)
+def adlib(lib):
+    """ Install latest version of library from pip 
+        and add it to requirements.txt """
+    # TODO: Sort requirements.txt alphabetically for extra pizzazz
+    sudo('pip install {0}'.format(lib))
+    sudo('pip freeze | grep -- {0} >> /vagrant/requirements.txt'.format(lib))

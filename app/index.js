@@ -43,6 +43,11 @@ var YoDjangoGenerator = yeoman.generators.Base.extend({
             name:    'djangoVersion',
             message: 'Django version to use?',
             default: '1.6.5', },
+          
+          { type:    'input',
+            name:    'baseBoxName',
+            message: 'Name of base Vagrant box?', // todo include output
+            default: 'yo-django'                  // of vagrant box list 
 
           { type:    'input',
             name:    'baseBoxURL',
