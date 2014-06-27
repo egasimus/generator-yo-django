@@ -100,10 +100,9 @@ var YoDjangoGenerator = yeoman.generators.Base.extend({
             this.answers.wwwDir = '/www/' + props.projectName;
             this.answers.logDir = '/var/log/' + props.projectName;
             
-            this.answers.projectUser = this.answers.projectGroup =
-            this.answers.baseBoxName = props.projectName;
+            this.answers.projectUser = this.answers.projectGroup = props.projectName;
             
-            this.answers.secretKey = self._secretKey(96);
+            this.answers.secretKey = self._secretKey(128);
 
             if (props.hasDatabase) {
                  var dbPrompts = [

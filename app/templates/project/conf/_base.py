@@ -70,8 +70,7 @@ FILE_UPLOAD_PERMISSIONS = 0664
 
 
 # Django infrastructure
-TEMPLATE_LOADERS = ('dbtemplates.loader.Loader',
-                    'django.template.loaders.filesystem.Loader',
+TEMPLATE_LOADERS = ('django.template.loaders.filesystem.Loader',
                     'django.template.loaders.app_directories.Loader',)
 TEMPLATE_DIRS = [rel('templates')]
 TEMPLATE_CONTEXT_PROCESSORS = (
