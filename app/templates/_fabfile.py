@@ -13,6 +13,10 @@ class IdentityTask(Task):
         super(IdentityTask, self).__init__(*args, **kwargs)
         self.func = func
 
+    @property
+    def __doc__(self):
+        return self.func.__doc__
+
     def run(self, *args, **kwargs):
         conf = {"host_string": "<%= hostIP %>",
                 "key_filename": self.get_identity_file(),

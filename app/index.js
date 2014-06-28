@@ -23,7 +23,24 @@ var YoDjangoGenerator = yeoman.generators.Base.extend({
         return result;
     },
 
-
+    _features: [
+        {value: 'django_drf',         name: 'Django:  REST framework'       },
+        {value: 'django_tastypie',    name: 'Django:  Tastypie'             },
+        {value: 'django_usermodel',   name: 'Django:  custom User model'    },
+        {value: 'django_adminsite',   name: 'Django:  custom admin Site'    },
+        {value: 'django_authority',   name: 'Django:  Authority permissions'},
+        {value: 'django_dbtemplates', name: 'Django:  DB templates'         },
+        {value: 'service_pgsql',      name: 'Service: PostgreSQL'           },
+        {value: 'service_mysql',      name: 'Service: MySQL'                },
+        {value: 'service_sqlite',     name: 'Service: SQLite'               },
+        {value: 'service_mongodb',    name: 'Service: MongoDB'              },
+        {value: 'service_memcached',  name: 'Service: memcached',           },
+        {value: 'service_redis',      name: 'Service: Redis',               },
+        {value: 'service_uwsgi',      name: 'Service: uWSGI',               },
+        {value: 'service_gunicorn',   name: 'Service: Gunicorn',            }, 
+        {value: 'service_nginx',      name: 'Service: nginx',               },
+        {value: 'service_apache',     name: 'Service: Apache',              ],
+ 
     askFor: function () {
         var self = this;
         var done = this.async();
@@ -47,7 +64,7 @@ var YoDjangoGenerator = yeoman.generators.Base.extend({
           { type:    'input',
             name:    'baseBoxName',
             message: 'Name of base Vagrant box?', // todo include output
-            default: 'yo-django'                  // of vagrant box list 
+            default: 'yo-django' },               // of vagrant box list 
 
           { type:    'input',
             name:    'baseBoxURL',
@@ -65,6 +82,11 @@ var YoDjangoGenerator = yeoman.generators.Base.extend({
             message: 'Provision VM using:',
             choices: ['shell', 'puppet'],
             default: 'shell', },
+
+          { type:    'checkbox',
+            name:    'features',
+            message: 'Pick features to install',
+            choices: this._features, },
 
           { type:    'list',
             name:    'server',
